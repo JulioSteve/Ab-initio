@@ -61,8 +61,8 @@ alpha_1 = 1.45 ; alpha_2 = 2.91
 res = np.round(Energ([1,0],[alpha_1,alpha_2]),5)
 print("Total initial energy is "+str(res)+" eV.\n")
 
-S = np.array([[S(alpha_1,alpha_1), S(alpha_1,alpha_2)],[S(alpha_2,alpha_1), S(alpha_2,alpha_2)]])
-Sd, P = LA.eigh(S)
+S0 = np.array([[S(alpha_1,alpha_1), S(alpha_1,alpha_2)],[S(alpha_2,alpha_1), S(alpha_2,alpha_2)]])
+Sd, P = LA.eigh(S0)
 Sd = np.diag(Sd**(-1/2))
 Pm = LA.inv(P)
 SLowdin = P@Sd@Pm
