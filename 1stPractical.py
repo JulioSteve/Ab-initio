@@ -98,7 +98,7 @@ def integration(eps=1e-8, maxsteps=100, ALIST=[alpha_1, alpha_2], debug_print=Fa
 
     while abs(E-Enew)>=eps:
         if debug_print:
-            print(f"DEBUG: New energy is {Enew:.2f} eV.\n")
+            print(f"DEBUG: New energy is {Enew:.8f} eV.\n")
         E = Enew
         C = Cnew
         Cnew, Enew = OneRound(C, ALIST)
@@ -115,13 +115,14 @@ def integration(eps=1e-8, maxsteps=100, ALIST=[alpha_1, alpha_2], debug_print=Fa
     if breakflag == False:
         if debug_print:
             print("") #visual improvement of in the terminal
-        print(f"Ab-initio simulation gives a total energy of {Enew:.5f} eV after {compteur} iterations.")
+        print(f"Ab-initio simulation gives a total energy of {Enew:.8f} eV after {compteur} iterations.")
     else:
         print("Correct function, convergence not acquired, no energy results.")
     
-    return EList
+    return EList, Cnew
 
-Conv = np.array(integration(debug_print=True))
+Conv, CLast = integration(debug_print=True)
+Conv = np.array(Conv)
 
 def Convplot(plot):
     if plot:
@@ -175,3 +176,15 @@ def Convplot(plot):
         plt.show()
 
 Convplot(plot=False)
+
+def calc_I_final(CLIST,ALIST=[alpha_1,alpha_2]):
+    Iret = 0
+    for i in range(len(CLIST)):
+        for j in range(len(CLIST)):
+            Iret += CLIST[i]*CLIST[j]*I(ALIST[i],ALIST[j])
+    return Iret
+
+Ifinal = calc_I_final(CLast)*27.2114
+print("\n"+f"The last integral I = {Ifinal:.5f} eV")
+print(f"The last integral J = {Conv[-1]-2*Ifinal:.5f} eV")
+print(f"Neglecting bi-electronic interaction (J=0): E_el = {2*Ifinal:.5f} eV")
