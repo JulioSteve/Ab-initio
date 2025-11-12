@@ -1,0 +1,8 @@
+a=0.8
+b=3.0
+n=30
+for i in $(seq 1 $n)
+do
+x=$(echo "$a+($b-$a)/($n-1)*($i-1)"| bc -l)
+echo "i = $i -> x = $x"
+done
